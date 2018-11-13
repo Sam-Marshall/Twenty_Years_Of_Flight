@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Flight Things</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q==" crossorigin=""></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <style type="text/css">
+        #map img,
+        #stats1 img,
+        #stats2 img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="jumbotron text-center">
+                <h1>Flight Dashboard</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class='col-md-12'>
+                <div id='map'>
+                    <img src="http://spatial.ly/wp-content/uploads/2012/06/flights_sml.jpg">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class='col-md-6'>
+                <div id='stats1'>
+                    <img src="http://www.rocketroute.com/wp-content/uploads/250-685x385.png">
+                </div>
+            </div>
+            <div class='col-md-6'>
+                <div id='stats2'>
+                    <img src="http://westarassociates.com/wp-content/uploads/2016/08/Stats2.jpg">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
