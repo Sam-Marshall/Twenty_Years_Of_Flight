@@ -1,6 +1,7 @@
 __pycache__
 __pycache__/
 *.pyc
+config.py
 .env
 env/
 .DS_Store
