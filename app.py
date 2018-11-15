@@ -12,12 +12,14 @@ from sqlalchemy import create_engine, func
 from flask import Flask, render_template, redirect, jsonify
 
 import pymysql
+import config
+
 pymysql.install_as_MySQLdb()
 
 #################################################
 # Database Setup
 #################################################
-engine = create_engine("mysql://root:Bi*024509@localhost:3306/flights_db")
+engine = create_engine("mysql://root:" + config.SQL_password +"@localhost:3306/flights_db")
 
 # Reflect an existing database into a new model and the tables
 Base = automap_base()
