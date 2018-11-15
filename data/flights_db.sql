@@ -37,7 +37,6 @@ from flights_all
 where origin <> destination
 group by origin, destination, origin_city, destination_city, origin_state, destination_state, fly_month;
 
-
 create table airports_month as
 select
 	a.airport,
