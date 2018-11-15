@@ -2,6 +2,7 @@ __pycache__
 __pycache__/
 *.pyc
 config.py
+static/js/config.js
 .env
 env/
 .DS_Store
