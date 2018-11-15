@@ -1,0 +1,7 @@
+#map img,
+#stats1 img,
+#stats2 img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 5px;
+}
