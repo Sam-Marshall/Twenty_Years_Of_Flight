@@ -16,7 +16,7 @@ create table flights_all (
   destination_pop INTEGER
 );
 
-load data infile 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/flight_edges.tsv' into table flights_all;
+load data local infile '/Users/stacymarshall/Desktop/flight_edges.tsv' into table flights_all;
 
 create table flights_cleaned as
 select 
@@ -95,3 +95,14 @@ alter table airports modify flights_total INTEGER;
 alter table airports modify passengers_out INTEGER;
 alter table airports modify passengers_in INTEGER;
 alter table airports modify passengers_total INTEGER;
+
+create table lat_lng(
+	airport VARCHAR(3),
+	latitude DECIMAL(10,7),
+	longitude DECIMAL (10,7)
+);
+
+-- import  lat_lng_min.csv file using import wizrd
+
+alter table lat_lng
+add primary key(airport);
