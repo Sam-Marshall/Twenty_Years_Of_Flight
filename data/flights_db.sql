@@ -43,6 +43,8 @@ select
     a.city,
     a.state,
 	a.fly_month,
+    a.fly_month div 100 as year,
+    a.fly_month mod 100 as month,
 	a.flights_out,
     b.flights_in,
     (a.flights_out + b.flights_in) as flights_total,
@@ -54,7 +56,7 @@ from (
 	select origin as airport, origin_city as city, origin_state as state, fly_month, sum(flights) as flights_out, sum(passengers) as passengers_out
 	from flights_cleaned
 	group by 1, 2, 3, 4
-) as a left join (
+) as a inner join (
 	select destination as airport, destination_city as city, destination_state as state, fly_month, sum(flights) as flights_in, sum(passengers) as passengers_in
 	from flights_cleaned
 	group by 1, 2, 3, 4
