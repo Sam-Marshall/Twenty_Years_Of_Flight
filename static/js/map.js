@@ -15,5 +15,7 @@ L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 var flying = [{ "from": [-118.2705, 33.9984], "to": [-122.789336, 37.920458], "labels": ["Los Angeles", "San Francisco"], "color": "#ff3a31", "value": 25 }];
 
 d3.json('/airports', function(data) {
-	console.log(data);
+    console.log(data);
 });
+
+L.migrationLayer({data: flying, map: myMap}).addTo(myMap);
