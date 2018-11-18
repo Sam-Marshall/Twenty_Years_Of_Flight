@@ -37,6 +37,11 @@ from flights_all
 where origin <> destination
 group by origin, destination, origin_city, destination_city, origin_state, destination_state, fly_month;
 
+alter table flights_cleaned modify passengers INTEGER;
+alter table flights_cleaned modify seats INTEGER;
+alter table flights_cleaned modify flights INTEGER;
+alter table flights_cleaned add column id int(10) primary key auto_increment;
+
 create table airports_month as
 select
 	a.airport,
