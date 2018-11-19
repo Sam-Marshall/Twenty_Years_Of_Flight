@@ -46,16 +46,19 @@ function getPaths(origin, start_date, end_date) {
     });
 }
 
-// function clearLayer() {
-//     myMap.removeLayer(migrationGroup);
-// }
+function alert() {
+    d3.event.preventDefault();
+    alert('Hello');
+}
 
-function slider() {
+function sliderFunc() {
     var slider = createD3RangeSlider(0, 19, "#slider-container");
     slider.range(0, 19);
     var begin = 0;
     var end = 19;
+    d3.select('.slider').selectAll('div').on('change', alert);
     slider.onChange(newRange => {
+        // d3.event.preventDefault();
         var newBegin = newRange.begin;
         var newEnd = newRange.end;
         if ((begin != newBegin) || (end != newEnd)) {
@@ -66,6 +69,19 @@ function slider() {
             d3.select("#range-label").text(start_year + " - " + end_year);
             var airport = d3.select("#map").attr('airpot_value');
             console.log(start_year, end_year, airport);
+            d3.select('.WW').on("mouseup", function(){
+                alert('Hello 1!');
+            });
+            d3.select('.EE').on("mouseup", function(){
+                alert('Hello 2!');
+            });
+            d3.select('.handle').on("mouseup", function(){
+                alert('Hello 3!');
+            });
+            d3.select('.slider').selectAll('div').on("mouseup", function(){
+                d3.event.preventDefault();
+                alert('Hello 4!');
+            });
             // start_year = start_year.toString() + '01';
             // end_year = end_year.toString() + '12';
             // clearLayer();
@@ -75,7 +91,7 @@ function slider() {
 }
 
 function init() {
-    slider();
+    sliderFunc();
     getPaths('ORD', 200901, 200912);
 }
 
