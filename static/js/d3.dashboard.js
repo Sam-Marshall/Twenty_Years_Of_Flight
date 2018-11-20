@@ -13,7 +13,7 @@ function pieChart(id, top, start_date, end_date) {
     };
 
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 3;
-    var color = d3.scaleOrdinal(d3.schemeSet3);
+    var color = d3.scaleOrdinal(d3.schemeCategory20c);
             
     // create svg for pie chart.
     var pieGroup = d3.select(id)
@@ -30,7 +30,7 @@ function pieChart(id, top, start_date, end_date) {
 
     var url = `/top/${top}/${start_date}/${end_date}`;
 
-    d3.json(url).then(function(top_data) {
+    d3.json(url, function(top_data) {
 
         top_data.forEach(function (data) {
             data.flights_total = +data.flights_total;
@@ -68,7 +68,7 @@ function pieChart(id, top, start_date, end_date) {
                 barChart.update(value, start_date, end_date);
             })
             .on("dblclick", function () {
-                barChart.update("ALL");
+                barChart.update("ALL", start_date, end_date);
             });
     
         g.append("text")
@@ -119,7 +119,7 @@ function barChart(id, airport, start_date, end_date) {
         
     var url = `/airports/${airport}/${start_date}/${end_date}`;
 
-    d3.json(url).then(function(migration_data) {
+    d3.json(url, function(migration_data) {
         
         migration_data.forEach(function (d) {
             d.migration = +d.migration;
@@ -171,7 +171,7 @@ function barChart(id, airport, start_date, end_date) {
 
         var url = `/airports/${airport}/${start_date}/${end_date}`;
 
-        d3.json(url).then(function(migration_data) {
+        d3.json(url, function(migration_data) {
 
             // update the domain of the y-axis map to reflect change in frequencies.
             // x.domain([d3.min(migration_data, d => d.migration), d3.max(migration_data, d => d.migration)]);
