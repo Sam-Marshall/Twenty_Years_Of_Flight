@@ -77,6 +77,28 @@ def names():
 
     return jsonify(all_airports)
 
+@app.route('/airports_month')
+def months():
+    """Return a list of airports with their months"""
+    # Query all airports
+    results = db.session.query(Airports_month).all()
+
+    # Create a dictionary from the row data and append to a list of all_passengers
+    all_airports_month = []
+    for airport in results:
+        airport_dict = {}
+        airport_dict["airport"] = airport.airport
+        airport_dict["fly_month"] = airport.fly_month
+        airport_dict["month"] = airport.month
+        airport_dict["year"] = airport.year
+        airport_dict["flights_in"] = airport.flights_in
+        airport_dict["flights_out"] = airport.flights_out
+        airport_dict["flights_total"] = airport.flights_total
+        all_airports_month.append(airport_dict)
+
+    return jsonify(all_airports_month)
+
+
 @app.route('/airport_loc/<origin_airport_code>/<start_date>/<end_date>')
 def test(origin_airport_code, start_date, end_date):
     results = db.session.query( \
