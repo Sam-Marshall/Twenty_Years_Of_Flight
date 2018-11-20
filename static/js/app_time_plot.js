@@ -20,55 +20,38 @@ var svg = d3
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
 
-var parseTime = d3.timeParse("%Y%m");
+// var parseTime = d3.timeParse("%Y%m");
+console.log("Hi John! 1");
 
-// $('#example').dataTable( {
-//   "columns": [
-//     { 0: "Origin_Airport_Code" },
-//     { 1: "Destination_Airport_Code" },
-//     { 2: "Origin_City" },
-//     { 3: "Destination_City" },
-//     { 4: "Passengers" },
-//     { 5: "Seats" },
-//     { 6: "Flights" },
-//     { 7: "Distance" },
-//     { 8: "Date_(yyyymm)_of_Flight" },
-//     { 9: "Origin_Pop" },
-//     { 10: "Destination_Pop" },
-//   ]
-// } );
-
-d3.tsv("../data/JHD_flight_edges.tsv").then(function(data) {
-    console.log("Hi John! 3");
-    data.forEach(function(d) {
-        console.log(d[8]);
-        d["8"] = +d["8"];
-        d["8"] = parseTime(d["8"]);
-     });
-    
-    
-    var xScaler = d3.scaleLinear().domain([d => d3.min(d3.values(d["8"])), d => d3.max(d3.values(d["8"]))]).range([0, chartWidth]);
+d3.json("/airports_month").then(function(data) {
+    console.log("Hi John! 2");
+    var xScaler = d3.scaleLinear().domain([d => d3.min(d3.values(d.fly_month)), d => d3.max(d3.values(d.fly_month))]).range([0, chartWidth]);
     var yScaler = d3.scaleLinear().domain([500, 3000]).range([chartHeight, 0]);
     var xAxis = d3.axisBottom(xScaler);
     var yAxis = d3.axisLeft(yScaler);
     
-    var date_list = data.forEach(d => d["8"]);
-    var date_list_sorted = date_list.sort();
-    var date_list_unique = d3.set(date_list_sorted).values();
-    var date_list_unique_counts = [];
-    for(var i = 0; i < date_list_unique.length; i++){
-        z = 0;
-        for(var j = 0; j < date_list.length; j++){
-            if(date_list[j] === date_list_unique[i]){
-                z =+ 1;
-            };
-        date_list_unique_counts.push(z);
-        };
+    // Might NOT use
+//     var date_list = []
+//     data.forEach(d => date_list.push(d.fly_month));
+//     var date_list_sorted = date_list.sort();
+//     var date_list_unique = d3.set(date_list_sorted).values();
+//     var date_flights = [];
+//     data.forEach(d => date_flights.push(d.flights_out));
+//     var date_list_unique_counts = [];
+//     for(var i = 0; i < date_list_unique.length; i++){
+//         z = 0;
+//         for(var j = 0; j < date_list.length; j++){
+//             if(date_list[j] === date_list_unique[i]){
+//                 z =+ 1;
+//             };
+//         date_list_unique_counts.push(z);
+//         };
     
     var drawLine = d3
     .line()
-    .x(xTimeScale(date_list_unique))
-    .y(yLinearScale(date_list_unique_counts));
+    .x(xScaler(data.fly_month))
+    .y(yScaler(data.flights_out));
+    console.log(drawLine(data));
     
 //     var line = d3.line()
 //     .x(date_list_unique)
@@ -82,7 +65,7 @@ d3.tsv("../data/JHD_flight_edges.tsv").then(function(data) {
     .attr("stroke-linejoin", "round")
     .attr("stroke-linecap", "round")
     .attr("stroke-width", 1.5)
-    .attr("d", drawLine)
+    .attr("d", drawLine(data))
     .classed("line", true);
     
     
@@ -99,7 +82,7 @@ d3.tsv("../data/JHD_flight_edges.tsv").then(function(data) {
     .attr("transform", "translate("+ (chartWidth/2) +","+(chartHeight + 25)+")")
     .text("Date");
     
-    }});
+     });
 
 
     
