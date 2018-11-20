@@ -3,9 +3,9 @@ body{
     width:1060px;
     margin:50px auto;
 }
-path {
+/* path {
     stroke: #fff;
-}
+} */
 
 path:hover {
     opacity:0.5;
@@ -80,4 +80,10 @@ rect:hover {
     text-transform: capitalize;
     background: rgba(0, 0, 0, 0.8);
     border-radius: 4px;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
 }

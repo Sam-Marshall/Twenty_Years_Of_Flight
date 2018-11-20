@@ -95,8 +95,10 @@ def months():
         airport_dict["flights_out"] = airport.flights_out
         airport_dict["flights_total"] = airport.flights_total
         all_airports_month.append(airport_dict)
-
-    return jsonify(all_airports_month)
+        
+    data_sorted = sorted(all_airports_month, key=lambda item: item['fly_month'])
+    data_sorted = [data_sorted[1], data_sorted[3001], data_sorted[7001]]
+    return jsonify(data_sorted)
 
 
 @app.route('/airport_loc/<origin_airport_code>/<start_date>/<end_date>')
