@@ -8,14 +8,75 @@ myMap.scrollWheelZoom.disable()
 L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
     attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
     maxZoom: 18,
-    id: "mapbox.streets",
+    id: "mapbox.dark",
     accessToken: "pk.eyJ1Ijoia3VsaW5pIiwiYSI6ImNpeWN6bjJ0NjAwcGYzMnJzOWdoNXNqbnEifQ.jEzGgLAwQnZCv9rA6UTfxQ"
 }).addTo(myMap);
 
-var flying = [{ "from": [-118.2705, 33.9984], "to": [-122.789336, 37.920458], "labels": ["Los Angeles", "San Francisco"], "color": "#ff3a31", "value": 25 }];
+function getPaths(origin, start_date, end_date) {
+    d3.json('/airport_loc/' + origin + '/' + start_date + '/' + end_date, function(data) {
+        console.log(data);
 
-d3.json('/airports', function(data) {
-    console.log(data);
-});
+        top_20 = data.slice(0, 20);
+        d3.select("#map").attr('airpot_value', origin);
 
-L.migrationLayer({data: flying, map: myMap}).addTo(myMap);
+        var top_20_f_paths = [];
+        var colors = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
+            '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+            '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',
+            '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+            '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC'
+        ];
+
+        top_20.forEach((d, i) => {
+            var data = {};
+            var lat = parseFloat(d.dest_latitude);
+            var lng = parseFloat(d.dest_longitude);
+            data.from = [-87.6298, 41.8781];
+            data.to = [lng, lat];
+            data.labels = ["", ""];
+            data.color = colors[i];
+            data.value = d.all_flights;
+            top_20_f_paths.push(data);
+        });
+        // var migrationGroup;
+        // clearLayer();
+        var migrationGroup = L.migrationLayer({ data: top_20_f_paths, map: myMap });
+        migrationGroup.addTo(myMap);
+
+    });
+}
+
+// function clearLayer() {
+//     myMap.removeLayer(migrationGroup);
+// }
+
+function slider() {
+    var slider = createD3RangeSlider(0, 19, "#slider-container");
+    slider.range(0, 19);
+    var begin = 0;
+    var end = 19;
+    slider.onChange(newRange => {
+        var newBegin = newRange.begin;
+        var newEnd = newRange.end;
+        if ((begin != newBegin) || (end != newEnd)) {
+            var start_year = newBegin + 1990;
+            var end_year = newEnd + 1990;
+            begin = newBegin;
+            end = newEnd;
+            d3.select("#range-label").text(start_year + " - " + end_year);
+            var airport = d3.select("#map").attr('airpot_value');
+            console.log(start_year, end_year, airport);
+            // start_year = start_year.toString() + '01';
+            // end_year = end_year.toString() + '12';
+            // clearLayer();
+            // getPaths(airport, start_year, end_year);
+        }
+    });
+}
+
+function init() {
+    slider();
+    getPaths('ORD', 200901, 200912);
+}
+
+init();

@@ -1,0 +1,83 @@
+
+body{
+    width:1060px;
+    margin:50px auto;
+}
+path {
+    stroke: #fff;
+}
+
+path:hover {
+    opacity:0.5;
+}
+
+rect:hover { 
+    opacity:0.5;
+}
+
+.axis { 
+    font: 10px sans-serif;
+}
+
+.legend tr {
+    border-bottom:1px solid grey;
+}
+
+.legend tr:first-child {
+    border-top:1px solid grey; 
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.y.axis path { 
+    display: none;
+}
+
+.legend{
+    margin-bottom:76px;
+    display:inline-block;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+.legend td{
+    padding:4px 5px;
+    vertical-align:bottom;
+}
+.legendFreq, .legendPerc{
+    align:right;
+    width:50px;
+}
+
+.bar--positive {
+    fill: rgb(112, 253, 131);
+}
+  
+.bar--negative {
+    fill: rgb(240, 114, 114);
+}
+
+.arc text {
+    font: 10px sans-serif;
+    font-weight: bold;
+    text-anchor: middle;
+}
+  
+.arc path {
+    stroke: #fff;
+}
+
+.d3-tip {
+    padding: 6px;
+    font-size: 10px;
+    line-height: 1;
+    line-height: 1.5em;
+    color: #fff;
+    text-align: center;
+    text-transform: capitalize;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 4px;
+}
