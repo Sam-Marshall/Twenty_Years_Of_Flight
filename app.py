@@ -21,6 +21,7 @@ pymysql.install_as_MySQLdb()
 # Flask Setup
 #################################################
 app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 #################################################
 # Database Setup
