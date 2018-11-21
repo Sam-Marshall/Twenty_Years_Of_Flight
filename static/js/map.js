@@ -1,6 +1,6 @@
 var myMap = L.map("map", {
     center: [39.8283, -98.5795],
-    zoom: 5
+    zoom: 4
 });
 
 myMap.scrollWheelZoom.disable()
@@ -14,7 +14,7 @@ L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 
 function getPaths(origin, start_date, end_date) {
     d3.json('/airport_loc/' + origin + '/' + start_date + '/' + end_date, function(data) {
-        console.log(data);
+        // console.log(data);
 
         top_20 = data.slice(0, 20);
         d3.select("#map").attr('airpot_value', origin);
@@ -49,34 +49,3 @@ function getPaths(origin, start_date, end_date) {
 // function clearLayer() {
 //     myMap.removeLayer(migrationGroup);
 // }
-
-function slider() {
-    var slider = createD3RangeSlider(0, 19, "#slider-container");
-    slider.range(0, 19);
-    var begin = 0;
-    var end = 19;
-    slider.onChange(newRange => {
-        var newBegin = newRange.begin;
-        var newEnd = newRange.end;
-        if ((begin != newBegin) || (end != newEnd)) {
-            var start_year = newBegin + 1990;
-            var end_year = newEnd + 1990;
-            begin = newBegin;
-            end = newEnd;
-            d3.select("#range-label").text(start_year + " - " + end_year);
-            var airport = d3.select("#map").attr('airpot_value');
-            console.log(start_year, end_year, airport);
-            // start_year = start_year.toString() + '01';
-            // end_year = end_year.toString() + '12';
-            // clearLayer();
-            // getPaths(airport, start_year, end_year);
-        }
-    });
-}
-
-function init() {
-    slider();
-    getPaths('ORD', 200901, 200912);
-}
-
-init();

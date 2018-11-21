@@ -6,13 +6,13 @@ function monthNumToName(monthnum) {
 }
 
 function pieChart(id, top, start_date, end_date) {
-    // var pC ={};    
+       
     var pieDim = {
         w:400,
-        h:400
+        h:300
     };
 
-    pieDim.r = Math.min(pieDim.w, pieDim.h) / 3;
+    pieDim.r = Math.min(pieDim.w, pieDim.h) / 2.5;
     var color = d3.scaleOrdinal(d3.schemeCategory20c);
             
     // create svg for pie chart.
@@ -32,9 +32,9 @@ function pieChart(id, top, start_date, end_date) {
 
     d3.json(url, function(top_data) {
 
-        top_data.forEach(function (data) {
-            data.flights_total = +data.flights_total;
-            data.flights_average = +data.flights_average;
+        top_data.forEach(function (d) {
+            d.flights_total = +d.flights_total;
+            d.flights_average = +d.flights_average;
         });
 
         // create a function to compute the pie slice angles.
@@ -42,13 +42,14 @@ function pieChart(id, top, start_date, end_date) {
 
         // Setup the tool tip
         var format = d3.format(",");
-        var tool_tip = d3.tip()
+        var pie_tool_tip = d3.tip()
             .attr("class", "d3-tip")
+            .attr("id", "pie-tooltip")
             .offset([-8, 0])
-            .html(function(d, i) { 
-                return (`${top_data[i].city}<br>Total Flights: ${format(top_data[i].flights_total)}<br>Monthly Average: ${format(top_data[i].flights_average)}`);
+            .html(function(d) { 
+                return (`${d.city}<br>Total Flights: ${format(d.flights_total)}<br>Monthly Average: ${format(d.flights_average)}`);
             });
-        pieGroup.call(tool_tip);
+        pieGroup.call(pie_tool_tip);
 
         var g = pieGroup.selectAll(".arc")
             .data(pie(top_data))
@@ -59,16 +60,23 @@ function pieChart(id, top, start_date, end_date) {
         g.append("path")
             .attr("d", arc)
             .attr("value", function(d, i) { return top_data[i].airport; })
+            .attr("start_date", start_date)
+            .attr("end_date", end_date)
             .each(function(d) { this._current = d; })
             .style("fill", function(d, i) { return color(i); })
-            .on('mouseover', tool_tip.show)
-            .on('mouseout', tool_tip.hide)
+            .on('mouseover', pie_tool_tip.show)
+            .on('mouseout', pie_tool_tip.hide)
             .on("click", function () {
                 var value = d3.select(this).attr("value");
-                barChart.update(value, start_date, end_date);
+                var start = d3.select(this).attr("start_date");
+                var end = d3.select(this).attr("end_date");
+                barChart.update(value, start, end);
+                getPaths(value, start, end);
             })
             .on("dblclick", function () {
-                barChart.update("ALL", start_date, end_date);
+                var start = d3.select(this).attr("start_date");
+                var end = d3.select(this).attr("end_date");
+                barChart.update("ALL", start, end);
             });
     
         g.append("text")
@@ -76,20 +84,59 @@ function pieChart(id, top, start_date, end_date) {
             .attr("dy", ".35em")
             .text(function(d, i) { return top_data[i].airport; });
             
-    }); 
+    });
+
+    // create function to update the bars. This will be used by pie-chart.
+    pieChart.update = function(top, start_date, end_date) {
+
+        var url = `/top/${top}/${start_date}/${end_date}`;
+
+        d3.json(url, function(top_data) {
+
+            top_data.forEach(function (data) {
+                data.flights_total = +data.flights_total;
+                data.flights_average = +data.flights_average;
+            });
+
+            // create a function to compute the pie slice angles.
+            var pie = d3.pie().sort(null).value(d => d.flights_average);
+            
+            pieGroup.selectAll("path")
+                .data(pie(top_data))
+                .transition()
+                .duration(500)
+                .attr("value", function(d, i) { return top_data[i].airport; })
+                .attr("start_date", start_date)
+                .attr("end_date", end_date)
+                .each(function(d) { this._current = d; })
+                .attrTween("d", arcTween);
+
+            pieGroup.selectAll("text")
+                .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+                .text(function(d, i) { return top_data[i].airport; });
+
+        });          
+    }
+
+    function arcTween(a) {
+        var i = d3.interpolate(this._current, a);
+        this._current = i(0);
+        return function(t) { return arc(i(t));    };
+    } 
+    
  
 }
 
 function barChart(id, airport, start_date, end_date) {
     // Define SVG area dimensions
     var svgWidth = 400;
-    var svgHeight = 400;
+    var svgHeight = 300;
 
     // Define the chart's margins as an object
     var chartMargin = {
-        top: 60,
+        top: 20,
         right: 30,
-        bottom: 30,
+        bottom: 40,
         left: 30
     };
 
@@ -138,7 +185,7 @@ function barChart(id, airport, start_date, end_date) {
             .attr("class", "d3-tip")
             .offset([-8, 0])
             .html(function(d) { 
-                return (`${d.city}<br>Total Passengers In: ${format(d.passengers_in)}<br>Total Passengers Out: ${format(d.passengers_out)}<br>Total Migration: ${format(d.migration_total)}<br>Average Migration: ${format(d.migration)}`);
+                return (`<b>${d.city}</b><br>Total Passengers In: ${format(d.passengers_in)}<br>Total Passengers Out: ${format(d.passengers_out)}<br>Total Migration: ${format(d.migration_total)}<br>Average Migration: ${format(d.migration)}`);
             });
         chartGroup.call(tool_tip);
 
@@ -173,9 +220,13 @@ function barChart(id, airport, start_date, end_date) {
 
         d3.json(url, function(migration_data) {
 
-            // update the domain of the y-axis map to reflect change in frequencies.
-            // x.domain([d3.min(migration_data, d => d.migration), d3.max(migration_data, d => d.migration)]);
-            
+            migration_data.forEach(function (d) {
+                d.migration = +d.migration;
+                d.migration_total = +d.migration_total;
+                d.passengers_in = +d.passengers_in;
+                d.passengers_out = +d.passengers_out;
+            });
+
             // Attach the new data to the bars.
             chartGroup.selectAll(".bar").data(migration_data);
             
@@ -188,6 +239,3 @@ function barChart(id, airport, start_date, end_date) {
     }
     
 }
-
-pieChart("#pie", 20, 199001, 200912);
-barChart("#bar", "ALL", 199001, 200912);
