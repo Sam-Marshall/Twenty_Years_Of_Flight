@@ -1,11 +1,13 @@
 
-body{
+body {
     width:1060px;
     margin:50px auto;
+    background: rgb(30, 30, 30);
+    color: rgb(199, 199, 199);
 }
-path {
+/* path {
     stroke: #fff;
-}
+} */
 
 path:hover {
     opacity:0.5;
@@ -19,37 +21,18 @@ rect:hover {
     font: 10px sans-serif;
 }
 
-.legend tr {
-    border-bottom:1px solid grey;
-}
-
-.legend tr:first-child {
-    border-top:1px solid grey; 
-}
-
 .axis path, .axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
+    fill: none;
+    stroke: rgb(199, 199, 199);
+    shape-rendering: crispEdges;
 }
 
 .y.axis path { 
     display: none;
 }
 
-.legend{
-    margin-bottom:76px;
-    display:inline-block;
-    border-collapse: collapse;
-    border-spacing: 0px;
-}
-.legend td{
-    padding:4px 5px;
-    vertical-align:bottom;
-}
-.legendFreq, .legendPerc{
-    align:right;
-    width:50px;
+.y.axis text, .x.axis text { 
+    fill: rgb(199, 199, 199);
 }
 
 .bar--positive {
@@ -64,10 +47,11 @@ rect:hover {
     font: 10px sans-serif;
     font-weight: bold;
     text-anchor: middle;
+    fill: rgb(199, 199, 199);
 }
   
 .arc path {
-    stroke: #fff;
+    stroke: rgb(30, 30, 30);
 }
 
 .d3-tip {
@@ -75,9 +59,9 @@ rect:hover {
     font-size: 10px;
     line-height: 1;
     line-height: 1.5em;
-    color: #fff;
+    color: rgb(0, 0, 0);
     text-align: center;
     text-transform: capitalize;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(199, 199, 199, 0.9);
     border-radius: 4px;
 }
