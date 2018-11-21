@@ -25,33 +25,41 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class='col-md-12'>
-                <div id='range-label' class='text-center' style="height: 20px;">1990 - 2009</div>
+            <div class='col-md-1'></div>
+            <div class='col-md-10'>
+                <div id='range-label' class='text-center' style="height: 20px;" start_year="1990" end_year="2009">1990 - 2009</div>
                 <div id='slider-container' style="height: 20px;"></div>
-                <div id='map' style="height: 100vh;"></div>
+                <button id="filter-btn" type="submit" class="btn btn-default center-block">Filter</button>
             </div>
+            <div class='col-md-1'></div>
         </div>
+        <hr>
         <div class="row">
             <div class='col-md-6'>
                 <h4 class="text-center">Top 20 Airports</h4>
-                <h5 class="text-center">By Total Number of National Flights from 1990 to 2009</h5>
+                <h5 class="text-center">By Total Number of National Flights from <b class="start_date">1990</b> to <b class="end_date">2009</b></h5>
                 <div id='pie'></div>
             </div>
             <div class='col-md-6'>
                 <h4 class="text-center">Population Migration</h4>
-                <h5 class="text-center">Average Migration by Month from 1990 to 2009</h5>
+                <h5 class="text-center">Average Migration by Month from <b class="start_date">1990</b> to <b class="end_date">2009</b></h5>
                 <div id='bar'></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class='col-md-12'>
+                <div id='map' style="height: 50vh;"></div>
             </div>
         </div>
         <div class="row">
             <div class='col-md-6'>
                 <div id='stats1'>
-                    <img src="http://www.rocketroute.com/wp-content/uploads/250-685x385.png">
+                    <!-- <img src="http://www.rocketroute.com/wp-content/uploads/250-685x385.png"> -->
                 </div>
             </div>
             <div class='col-md-6'>
                 <div id='stats2'>
-                    <img src="http://westarassociates.com/wp-content/uploads/2016/08/Stats2.jpg">
+                    <!-- <img src="http://westarassociates.com/wp-content/uploads/2016/08/Stats2.jpg"> -->
                 </div>
             </div>
         </div>
@@ -60,10 +68,11 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="{{ url_for('static', filename='js/leaflet.migrationLayer.js') }}"></script>
     <script src="{{ url_for('static', filename='js/d3RangeSlider.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
     <script src="{{ url_for('static', filename='js/config.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
     <script src="{{ url_for('static', filename='js/d3.dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init.js') }}"></script>
 </body>
 
 </html>
