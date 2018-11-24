@@ -1,0 +1,38 @@
+#slider-container {
+    height: 24px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.slider-container {
+    background-color: rgba(30, 30, 30, .75);
+}
+
+.slider {
+    background: #ffb875;
+    border-color: #7900ff;
+    border-width: 2px;
+}
+
+.slider .handle {
+    background: #7900ff;
+    border-color: #7900ff;
+}
+
+#filter-btn {
+    background: rgba(121, 0, 255, .3);
+    border-color: rgb(199, 199, 199);
+    color: rgb(199, 199, 199);
+}
+
+#filter-btn:hover {
+    background: rgba(251, 255, 64, .3);
+}
+
+#hidden-range {
+    display: none;
+}
+
+#range-label {
+    display: block;
+}
