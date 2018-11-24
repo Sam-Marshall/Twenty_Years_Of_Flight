@@ -33,3 +33,8 @@
 .infoBox {
     padding: 7px;
 }
+
+#info-boxes {
+    margin-left: 20px;
+    margin-right: 20px;
+}

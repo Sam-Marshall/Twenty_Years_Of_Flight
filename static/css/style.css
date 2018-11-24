@@ -2,6 +2,7 @@ body {
     width: 100%;
     background: #2b2d3e;
     color: rgb(199, 199, 199);
+    font-family: 'Fjalla One', sans-serif;
 }
 
 .chart {
@@ -19,12 +20,6 @@ body {
     background-color: rgba(30, 30, 30, .75);
     padding: 10px;
     margin-top: 20px;
-}
-
-#info-boxes,
-#slider_box {
-    margin-left: 20px;
-    margin-right: 20px;
 }
 
 .custom .leaflet-popup-tip,
