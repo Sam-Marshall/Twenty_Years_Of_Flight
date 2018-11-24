@@ -1,4 +1,3 @@
-
 function slider() {
 
     var slider = createD3RangeSlider(0, 19, "#slider-container");
@@ -34,18 +33,33 @@ function button() {
 
         var start_year = d3.select("#range-label").attr("start_year");
         var end_year = d3.select("#range-label").attr("end_year");
+        var origin_city = d3.select("#map").attr('airport_value');
 
         d3.selectAll(".start_date").text(start_year);
         d3.selectAll(".end_date").text(end_year);
-        
+        d3.selectAll(".airport_name").text(origin_city);
+
         pieChart.update(20, start_year * 100 + 1, end_year * 100 + 12);
-        barChart.update("ALL", start_year * 100 + 1, end_year * 100 + 12);
-    
+        barChart.update(origin_city, start_year * 100 + 1, end_year * 100 + 12);
+        getPaths.update(origin_city, start_year * 100 + 1, end_year * 100 + 12);
+        getInfoBoxes.update(origin_city, start_year * 100 + 1, end_year * 100 + 12);
+
+    });
+
+    filterButton.on('mouseover', function() {
+        d3.select('#range-label').style('display', 'none');
+        d3.select('#hidden-range').style('display', 'block');
+    });
+
+    filterButton.on('mouseout', function() {
+        d3.select('#range-label').style('display', 'block');
+        d3.select('#hidden-range').style('display', 'none');
     });
 }
 
 slider();
 button();
-pieChart("#pie", 20, 199001, 200912);
-barChart("#bar", "ALL", 199001, 200912);
 getPaths("ORD", 199001, 200912);
+pieChart("#pie", 20, 199001, 200912);
+barChart("#bar", "ORD", 199001, 200912);
+getInfoBoxes("ORD", 199001, 200912);

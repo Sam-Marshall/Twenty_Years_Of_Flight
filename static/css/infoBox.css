@@ -1,0 +1,35 @@
+#info-boxes {
+    margin-bottom: 15px;
+}
+
+#info_month {
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgba(121, 0, 255);
+    background-color: rgba(121, 0, 255, .3);
+}
+
+#info_flights_out {
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgba(0, 255, 0);
+    background-color: rgba(0, 255, 0, .3);
+}
+
+#info_distance_trav {
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgba(255, 0, 206);
+    background-color: rgba(255, 0, 206, .3);
+}
+
+#info_pop {
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgba(251, 255, 64);
+    background-color: rgba(251, 255, 64, .3);
+}
+
+.infoBox {
+    padding: 7px;
+}

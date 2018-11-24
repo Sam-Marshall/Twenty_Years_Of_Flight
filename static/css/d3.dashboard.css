@@ -1,10 +1,3 @@
-
-body {
-    width:1060px;
-    margin:50px auto;
-    background: rgb(30, 30, 30);
-    color: rgb(199, 199, 199);
-}
 /* path {
     stroke: #fff;
 } */
@@ -36,11 +29,11 @@ rect:hover {
 }
 
 .bar--positive {
-    fill: rgb(112, 253, 131);
+    fill: #00ff00;
 }
   
 .bar--negative {
-    fill: rgb(240, 114, 114);
+    fill: #ff00ba;
 }
 
 .arc text {

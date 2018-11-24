@@ -20,7 +20,7 @@ pymysql.install_as_MySQLdb()
 #################################################
 # Flask Setup
 #################################################
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 #################################################
@@ -207,6 +207,56 @@ def airports_all(start_date, end_date):
         airport_all_data.append(airport_dict)
 
     return jsonify(airport_all_data)
+
+@app.route('/airport_lookup/<airport_code>')
+def airport_loc_lookup(airport_code):
+    results = db.session.query(Lat_lng).filter(Lat_lng.airport == airport_code).all()
+    information = []
+    for result in results:
+        airport_dict = {}
+        airport_dict['airport'] = result.airport
+        airport_dict['latitude'] = str(result.latitude)
+        airport_dict['longitude'] = str(result.longitude)
+        information.append(airport_dict)
+    return jsonify(information)
+
+@app.route('/airport_summary/<airport_code>/<start_date>/<end_date>')
+def airport_summary(airport_code, start_date, end_date):
+    results = db.session.query(
+        Flights_cleaned.origin, 
+        Flights_cleaned.origin_city, 
+        func.max(Flights_cleaned.fly_month).label('end_date'),
+        func.min(Flights_cleaned.fly_month).label('start_date'),
+        func.sum(Flights_cleaned.distance * Flights_cleaned.flights).label('total_distance'),
+        func.avg(Flights_cleaned.origin_pop).label('avg_origin_pop'),
+        func.sum(Flights_cleaned.flights).label('total_flights'),
+        func.sum(Flights_cleaned.passengers).label('total_passengers'),
+        func.sum(Flights_cleaned.seats).label('total_seats'),
+        )\
+        .filter(Flights_cleaned.origin == airport_code)\
+        .filter(Flights_cleaned.fly_month >= start_date) \
+        .filter(Flights_cleaned.fly_month <= end_date) \
+        .group_by(
+            Flights_cleaned.origin, 
+            Flights_cleaned.origin_city
+        ).all()
+
+    information = []
+    for result in results:
+        airport_dict = {}
+        airport_dict['airport'] = result.origin
+        airport_dict['origin_city'] = result.origin_city
+        airport_dict['date_end'] = result.end_date
+        airport_dict['date_start'] = result.start_date
+        airport_dict['distance_total'] = int(result.total_distance)
+        airport_dict['distance_avg'] = int(int(result.total_distance) / int(result.total_flights))
+        airport_dict['origin_pop'] = int(result.avg_origin_pop)
+        airport_dict['flights_out_total'] = int(result.total_flights)
+        airport_dict['flights_out_monthly_avg'] = int(int(result.total_flights) / ((int(result.end_date - result.start_date) / 100) * 12))
+        airport_dict['passengers_total'] = int(result.total_passengers)
+        airport_dict['seats_total'] = int(result.total_seats)
+        information.append(airport_dict)
+    return jsonify(information)
 
 if __name__ == "__main__":
     app.run(debug=True)
