@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Flight Dashboard</title>
     <link rel="icon" href="/static/images/airplane.ico">
+    <link href="https://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/d3RangeSlider.css') }}">
@@ -19,18 +20,18 @@
 <body>
     <div class="container">
         <div class="row" id="page_header">
-            <h2>
+            <h1>
                 <span>Flight Dashboard</span>
-            </h2>
-            <h5>
+            </h1>
+            <h4>
                 <span class="city_name"></span>
-            </h5>
-            <h5>
+            </h4>
+            <h4>
                 <span>Airport: <b class="airport_name">ORD</b></span>
-            </h5>
-            <h5>
+            </h4>
+            <h4>
                 <span>Years: <b class="start_date">1990</b> to <b class="end_date">2009</b></span>
-            </h5>
+            </h4>
         </div>
         <div class="row" id='info-boxes'>
             <div class="col-sm-2 text-center infoBox" id='info_month'>
