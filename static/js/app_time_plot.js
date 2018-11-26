@@ -1,13 +1,13 @@
-function airportLineGraph(){
+function airportLineGraph(id, airport, start_date, end_date){
     //Creating the canvas
-    var svgWidth = 1000;
-    var svgHeight = 500;
+    var svgWidth = 600;
+    var svgHeight = 400;
 
     var chartMargin = {
       top: 30,
       right: 30,
       bottom: 30,
-      left: 90
+      left: 70
     };
 
     var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
@@ -33,20 +33,22 @@ function airportLineGraph(){
     var drawLine = d3
     .line()
     .x(d => xScaler(d.fly_month))
-    .y(d => yScaler(d.flights_out));
-
-
-
-
-
+    .y(d => yScaler(d.flights_total));
+    
+    var url = `/airports_month/${airport}/${start_date}/${end_date}`;
+    
+    
+    
     //Importing data
-    d3.json("/airports_month", function(data) {
+    d3.json(url, function(data) {
+        
+        //Making sure our values are what we expect
         data.forEach(function (d) {
             d.fly_month = parseTime(d.fly_month);
-            d.flights_out = +d.flights_out;
+            d.flights_out = +d.flights_total;
         });
         xScaler.domain(d3.extent(data, d => d.fly_month));
-        yScaler.domain(d3.extent(data, d => d.flights_out));
+        yScaler.domain(d3.extent(data, d => d.flights_total));
         var xAxis = d3.axisBottom(xScaler);
         var yAxis = d3.axisLeft(yScaler);
 
@@ -64,14 +66,44 @@ function airportLineGraph(){
         //Adding in labels for the axes
         chartGroup.append("text")
         .attr("text-anchor", "middle")
-        .attr("transform", "translate("+ (1/2) +","+(chartHeight/2)+")rotate(-90)")
+        .attr("transform", "translate("+ (-45) +","+(chartHeight/2)+")rotate(-90)")
         .text("Flights");
 
         chartGroup.append("text")
         .attr("text-anchor", "middle")
-        .attr("transform", "translate("+ (chartWidth/2) +","+(chartHeight + 26)+")")
+        .attr("transform", "translate("+ (chartWidth/2) +","+(chartHeight + 35)+")")
         .text("Date");
 
          });
 };
+    
+airportLineGraph.update = function(airport, start_date, end_date){
 
+    var url = `/airports_month/${airport}/${start_date}/${end_date}`;
+
+
+    //Importing updated data
+    d3.json(url, function(updatedData) {
+        
+        //Making sure our values are what we expect
+        data.forEach(function (d) {
+            d.fly_month = parseTime(d.fly_month);
+            d.flights_out = +d.flights_total;
+        });
+
+        //Appropriate Scaling
+        xScaler.domain(d3.extent(data, d => d.fly_month));
+        yScaler.domain(d3.extent(data, d => d.flights_total));
+        var xAxis = d3.axisBottom(xScaler);
+        var yAxis = d3.axisLeft(yScaler);
+
+        //Changing the graph and line
+        var svg = d3.select("body").transition();
+        svg.select("line").datum(updatedData).duration(750).attr("d", drawLine);
+        svg.select(".x.axis").duration(750).call(xAxis);
+        svg.select(".y.axis").duration(750).call(yAxis);
+
+        });
+};
+
+airportLineGraph("#line", "ABE", 199001, 200912);

@@ -77,11 +77,20 @@ def names():
 
     return jsonify(all_airports)
 
-@app.route('/airports_month')
-def months():
+@app.route('/airports_month/<airport>/<start_date>/<end_date>')
+def months(airport, start_date, end_date):
     """Return a list of airports with their months"""
     # Query all airports
-    results = db.session.query(Airports_month).all()
+    results = db.session.query(\
+                              Airports_month.airport, \
+                              Airports_month.month, \
+                              Airports_month.year, \
+                              Airports_month.flights_total, \
+                              Airports_month.fly_month) \
+                              .filter(Airports_month.airport == airport) \
+                              .filter(Airports_month.fly_month >= start_date) \
+                              .filter(Airports_month.fly_month <= end_date) \
+                              .all()
 
     # Create a dictionary from the row data and append to a list of all_passengers
     all_airports_month = []
@@ -91,13 +100,10 @@ def months():
         airport_dict["fly_month"] = airport.fly_month
         airport_dict["month"] = airport.month
         airport_dict["year"] = airport.year
-        airport_dict["flights_in"] = airport.flights_in
-        airport_dict["flights_out"] = airport.flights_out
         airport_dict["flights_total"] = airport.flights_total
         all_airports_month.append(airport_dict)
         
     data_sorted = sorted(all_airports_month, key=lambda item: item['fly_month'])
-    data_sorted = [data_sorted[1], data_sorted[3001], data_sorted[7001]]
     return jsonify(data_sorted)
 
 
