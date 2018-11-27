@@ -83,6 +83,7 @@ def months(airport, start_date, end_date):
     # Query all airports
     results = db.session.query(\
                               Airports_month.airport, \
+                              Airports_month.city, \
                               Airports_month.month, \
                               Airports_month.year, \
                               Airports_month.flights_total, \
@@ -97,6 +98,7 @@ def months(airport, start_date, end_date):
     for airport in results:
         airport_dict = {}
         airport_dict["airport"] = airport.airport
+        airport_dict["city"] = airport.city
         airport_dict["fly_month"] = airport.fly_month
         airport_dict["month"] = airport.month
         airport_dict["year"] = airport.year

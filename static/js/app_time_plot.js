@@ -1,3 +1,6 @@
+var airports_list = [];
+var airports_list_list = [];
+
 function airportLineGraph(id, airport, start_date, end_date){
     //Creating the canvas
     var svgWidth = 600;
@@ -40,17 +43,30 @@ function airportLineGraph(id, airport, start_date, end_date){
     
     
     //Importing data
-    d3.json(url, function(data) {
+    d3.json(url, function(data) { ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
         //Making sure our values are what we expect
         data.forEach(function (d) {
             d.fly_month = parseTime(d.fly_month);
-            d.flights_out = +d.flights_total;
+            d.flights_total = +d.flights_total;
         });
+        
+        airports_list.push(data);
+        airports_list_list.push(data);
+        
         xScaler.domain(d3.extent(data, d => d.fly_month));
         yScaler.domain(d3.extent(data, d => d.flights_total));
         var xAxis = d3.axisBottom(xScaler);
         var yAxis = d3.axisLeft(yScaler);
+        
+        //Setting up tool_tip
+        var tool_tip = d3.tip()
+            .attr("class", "d3-tip")
+            .offset([-8, 0])
+            .html(function(d, i) { 
+                return (`${data.airport}<br>${data.city}`);
+            });
+        chartGroup.call(tool_tip);
 
         //Adding in the line itself
         chartGroup.append("path")
@@ -58,10 +74,12 @@ function airportLineGraph(id, airport, start_date, end_date){
         .attr("fill", "none")
         .attr("class", "line")
         .attr("d", drawLine)
+        .on('mouseover', tool_tip.show)
+        .on('mouseout', tool_tip.hide)
 
         //Adding in the axes
-        chartGroup.append("g").attr("transform", `translate(0, ${chartHeight})`).call(xAxis);
-        chartGroup.append("g").call(yAxis);
+        chartGroup.append("g").attr("class", "x axis").attr("transform", `translate(0, ${chartHeight})`).call(xAxis);
+        chartGroup.append("g").attr("class", "y axis").call(yAxis);
 
         //Adding in labels for the axes
         chartGroup.append("text")
@@ -75,35 +93,91 @@ function airportLineGraph(id, airport, start_date, end_date){
         .text("Date");
 
          });
-};
+
     
-airportLineGraph.update = function(airport, start_date, end_date){
+    airportLineGraph.update = function(airport, start_date, end_date){ //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    var url = `/airports_month/${airport}/${start_date}/${end_date}`;
-
-
-    //Importing updated data
-    d3.json(url, function(updatedData) {
+        var url = `/airports_month/${airport}/${start_date}/${end_date}`;
         
-        //Making sure our values are what we expect
-        data.forEach(function (d) {
-            d.fly_month = parseTime(d.fly_month);
-            d.flights_out = +d.flights_total;
-        });
+        //Using code from earlier
+        var svgWidth = 600;
+        var svgHeight = 400;
+        var chartMargin = {
+          top: 30,
+          right: 30,
+          bottom: 30,
+          left: 70
+        };
+        var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
+        var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
+        var parseTime = d3.timeParse("%Y%m");
+        var xScaler = d3.scaleTime().range([0, chartWidth]);
+        var yScaler = d3.scaleLinear().range([chartHeight, 0]);
+        var drawLine = d3
+        .line()
+        .x(d => xScaler(d.fly_month))
+        .y(d => yScaler(d.flights_total));
+    d3.selectAll("path.line").remove();
 
-        //Appropriate Scaling
-        xScaler.domain(d3.extent(data, d => d.fly_month));
-        yScaler.domain(d3.extent(data, d => d.flights_total));
-        var xAxis = d3.axisBottom(xScaler);
-        var yAxis = d3.axisLeft(yScaler);
+        //Importing updated data
+        d3.json(url, function(updatedData) {
+            
+            updatedData.forEach(function (d) {
+                d.fly_month = parseTime(d.fly_month);
+                d.flights_total = +d.flights_total;
+            });
+            
+            Array.prototype.push.apply(airports_list[0], updatedData);
 
-        //Changing the graph and line
-        var svg = d3.select("body").transition();
-        svg.select("line").datum(updatedData).duration(750).attr("d", drawLine);
-        svg.select(".x.axis").duration(750).call(xAxis);
-        svg.select(".y.axis").duration(750).call(yAxis);
+            //Making sure our values are what we expect
+            airports_list.forEach(function (data) {
+                data.forEach(function (d) {
+//                 d.fly_month = parseTime(d.fly_month);
+                d.flights_total = +d.flights_total;
+                });
+            });
+            
+            console.log(airports_list[0]);
+            airports_list_list.push(updatedData);
 
-        });
+            //Appropriate Scaling
+            xScaler.domain(d3.extent(airports_list[0], d => d.fly_month));
+            yScaler.domain(d3.extent(airports_list[0], d => d.flights_total));
+            var xAxis = d3.axisBottom(xScaler);
+            var yAxis = d3.axisLeft(yScaler);
+            
+            //Setting up tool_tip
+            var tool_tip = d3.tip()
+                .attr("class", "d3-tip")
+                .offset([-8, 0])
+                .html(function(d, i) { 
+                    return (`${d.airport}<br>${d.city}`);
+                });
+            chartGroup.call(tool_tip);
+            var svg = d3.select("body").transition();
+//             svg.select("line").datum(d).duration(750).attr("d", drawLine);
+            svg.select(".x.axis").call(xAxis);
+            svg.select(".y.axis").call(yAxis);
+            
+            airports_list_list.forEach(function(d) {
+            //Changing the graph and line
+                chartGroup.append("path")
+                .datum(d)
+                .attr("fill", "none")
+                .attr("class", "line")
+                .attr("d", drawLine)
+                .on('mouseover', tool_tip.show)
+                .on('mouseout', tool_tip.hide)
+            });
+
+            });
+    };
+};
+
+function deleteLines(){
+    d3.selectAll("path.line").remove();
+    airports_list[0] = [];
+    airports_list_list = [];
 };
 
 airportLineGraph("#line", "ABE", 199001, 200912);
