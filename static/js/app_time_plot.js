@@ -5,14 +5,12 @@ function airportLineGraph(id, airport, start_date, end_date){
     //Creating the canvas
     var svgWidth = 600;
     var svgHeight = 400;
-
     var chartMargin = {
       top: 30,
       right: 30,
       bottom: 30,
       left: 70
     };
-
     var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
     var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
 
@@ -43,7 +41,7 @@ function airportLineGraph(id, airport, start_date, end_date){
     
     
     //Importing data
-    d3.json(url, function(data) { ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    d3.json(url, function(data) { 
         
         //Making sure our values are what we expect
         data.forEach(function (d) {
@@ -54,8 +52,10 @@ function airportLineGraph(id, airport, start_date, end_date){
         airports_list.push(data);
         airports_list_list.push(data);
         
-        xScaler.domain(d3.extent(data, d => d.fly_month));
-        yScaler.domain(d3.extent(data, d => d.flights_total));
+//         xScaler.domain(d3.extent(data, d => d.fly_month));
+//         yScaler.domain(d3.extent(data, d => d.flights_total));
+        xScaler.domain([d3.min(airports_list[0], d => d.fly_month), d3.max(airports_list[0], d => d.fly_month)]);
+        yScaler.domain([d3.min(airports_list[0], d => d.flights_total), d3.max(airports_list[0], d => d.flights_total)]);
         var xAxis = d3.axisBottom(xScaler);
         var yAxis = d3.axisLeft(yScaler);
         
@@ -64,7 +64,7 @@ function airportLineGraph(id, airport, start_date, end_date){
             .attr("class", "d3-tip")
             .offset([-8, 0])
             .html(function(d, i) { 
-                return (`${data.airport}<br>${data.city}`);
+                return (`${d[0].airport}<br>${d[0].city}`);
             });
         chartGroup.call(tool_tip);
 
@@ -95,7 +95,7 @@ function airportLineGraph(id, airport, start_date, end_date){
          });
 
     
-    airportLineGraph.update = function(airport, start_date, end_date){ //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    airportLineGraph.update = function(airport, start_date, end_date){ 
 
         var url = `/airports_month/${airport}/${start_date}/${end_date}`;
         
@@ -132,7 +132,6 @@ function airportLineGraph(id, airport, start_date, end_date){
             //Making sure our values are what we expect
             airports_list.forEach(function (data) {
                 data.forEach(function (d) {
-//                 d.fly_month = parseTime(d.fly_month);
                 d.flights_total = +d.flights_total;
                 });
             });
@@ -141,8 +140,10 @@ function airportLineGraph(id, airport, start_date, end_date){
             airports_list_list.push(updatedData);
 
             //Appropriate Scaling
-            xScaler.domain(d3.extent(airports_list[0], d => d.fly_month));
-            yScaler.domain(d3.extent(airports_list[0], d => d.flights_total));
+//             xScaler.domain(d3.extent(airports_list[0], d => d.fly_month));
+//             yScaler.domain(d3.extent(airports_list[0], d => d.flights_total));
+            xScaler.domain([d3.min(airports_list[0], d => d.fly_month), d3.max(airports_list[0], d => d.fly_month)]);
+            yScaler.domain([d3.min(airports_list[0], d => d.flights_total), d3.max(airports_list[0], d => d.flights_total)]);
             var xAxis = d3.axisBottom(xScaler);
             var yAxis = d3.axisLeft(yScaler);
             
@@ -151,7 +152,7 @@ function airportLineGraph(id, airport, start_date, end_date){
                 .attr("class", "d3-tip")
                 .offset([-8, 0])
                 .html(function(d, i) { 
-                    return (`${d.airport}<br>${d.city}`);
+                    return (`${d[0].airport}<br>${d[0].city}`);
                 });
             chartGroup.call(tool_tip);
             var svg = d3.select("body").transition();
@@ -180,4 +181,4 @@ function deleteLines(){
     airports_list_list = [];
 };
 
-airportLineGraph("#line", "ABE", 199001, 200912);
+airportLineGraph("#line", "ORD", 199001, 200912);

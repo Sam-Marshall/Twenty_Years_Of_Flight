@@ -1,7 +1,29 @@
-#map img,
-#stats1 img,
-#stats2 img {
+body {
     width: 100%;
-    height: auto;
-    margin-bottom: 5px;
+    background: #2b2d3e;
+    color: rgb(199, 199, 199);
+    font-family: 'Fjalla One', sans-serif;
+}
+
+.chart {
+    background-color: rgba(30, 30, 30, .75);
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+#pie_bar_div {
+    margin-top: 10px;
+}
+
+#page_header {
+    margin-bottom: 15px;
+    background-color: rgba(30, 30, 30, .75);
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.custom .leaflet-popup-tip,
+.custom .leaflet-popup-content-wrapper {
+    background: rgba(121, 0, 255, .6);
+    color: rgb(199, 199, 199);
 }
