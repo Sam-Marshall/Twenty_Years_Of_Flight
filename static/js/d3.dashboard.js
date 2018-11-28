@@ -76,6 +76,7 @@ function pieChart(id, top, start_date, end_date) {
                 barChart.update(value, start, end);
                 getPaths.update(value, start, end);
                 getInfoBoxes.update(value, start, end);
+                airportLineGraph("#origin_line", value, start, end);
                 deleteLines();
                 airportLineGraph.update(value, start, end);
             })
