@@ -1,88 +1,184 @@
-var svgWidth = 1060;
-var svgHeight = 860;
+var airports_list = [];
+var airports_list_list = [];
 
-var chartMargin = {
-  top: 30,
-  right: 30,
-  bottom: 30,
-  left: 30
-};
+function airportLineGraph(id, airport, start_date, end_date){
+    //Creating the canvas
+    var svgWidth = 600;
+    var svgHeight = 400;
+    var chartMargin = {
+      top: 30,
+      right: 30,
+      bottom: 30,
+      left: 70
+    };
+    var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
+    var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
 
-var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
-var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
+    var svg = d3
+      .select("body")
+      .append("svg")
+      .attr("height", svgHeight + chartMargin.top + chartMargin.bottom)
+      .attr("width", svgWidth + chartMargin.left + chartMargin.right);
 
-var svg = d3
-  .select("body")
-  .append("svg")
-  .attr("height", svgHeight)
-  .attr("width", svgWidth)
+    var chartGroup = svg.append("g")
+      .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
 
-var chartGroup = svg.append("g")
-  .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
+    //To convert numbers of the for yyyymm into dates
+    var parseTime = d3.timeParse("%Y%m");
 
-// var parseTime = d3.timeParse("%Y%m");
-console.log("Hi John! 1");
+    //To scale graph and points onto our canvas
+    var xScaler = d3.scaleTime().range([0, chartWidth]);
+    var yScaler = d3.scaleLinear().range([chartHeight, 0]);
 
-d3.json("/airports_month").then(function(data) {
-    console.log("Hi John! 2");
-    var xScaler = d3.scaleLinear().domain([d => d3.min(d3.values(d.fly_month)), d => d3.max(d3.values(d.fly_month))]).range([0, chartWidth]);
-    var yScaler = d3.scaleLinear().domain([500, 3000]).range([chartHeight, 0]);
-    var xAxis = d3.axisBottom(xScaler);
-    var yAxis = d3.axisLeft(yScaler);
-    
-    // Might NOT use
-//     var date_list = []
-//     data.forEach(d => date_list.push(d.fly_month));
-//     var date_list_sorted = date_list.sort();
-//     var date_list_unique = d3.set(date_list_sorted).values();
-//     var date_flights = [];
-//     data.forEach(d => date_flights.push(d.flights_out));
-//     var date_list_unique_counts = [];
-//     for(var i = 0; i < date_list_unique.length; i++){
-//         z = 0;
-//         for(var j = 0; j < date_list.length; j++){
-//             if(date_list[j] === date_list_unique[i]){
-//                 z =+ 1;
-//             };
-//         date_list_unique_counts.push(z);
-//         };
-    
+    //To draw the line on the graph
     var drawLine = d3
     .line()
-    .x(xScaler(data.fly_month))
-    .y(yScaler(data.flights_out));
-    console.log(drawLine(data));
+    .x(d => xScaler(d.fly_month))
+    .y(d => yScaler(d.flights_total));
     
-//     var line = d3.line()
-//     .x(date_list_unique)
-//     .y(date_list_unique_counts)
-//     x.domain(d3.extent(date_list_unique));
-//     y.domain(d3.extent(date_list_unique_counts));
-    
-    chartGroup.append("path")
-    .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("stroke-linejoin", "round")
-    .attr("stroke-linecap", "round")
-    .attr("stroke-width", 1.5)
-    .attr("d", drawLine(data))
-    .classed("line", true);
+    var url = `/airports_month/${airport}/${start_date}/${end_date}`;
     
     
-    chartGroup.append("g").attr("transform", `translate(0, ${chartHeight})`).call(xAxis);
-    chartGroup.append("g").call(yAxis);
     
-    chartGroup.append("text")
-    .attr("text-anchor", "middle")
-    .attr("transform", "translate("+ (1/2) +","+(chartHeight/2)+")rotate(-90)")
-    .text("Flights");
+    //Importing data
+    d3.json(url, function(data) { 
+        
+        //Making sure our values are what we expect
+        data.forEach(function (d) {
+            d.fly_month = parseTime(d.fly_month);
+            d.flights_total = +d.flights_total;
+        });
+        
+        airports_list.push(data);
+        airports_list_list.push(data);
+        
+//         xScaler.domain(d3.extent(data, d => d.fly_month));
+//         yScaler.domain(d3.extent(data, d => d.flights_total));
+        xScaler.domain([d3.min(airports_list[0], d => d.fly_month), d3.max(airports_list[0], d => d.fly_month)]);
+        yScaler.domain([d3.min(airports_list[0], d => d.flights_total), d3.max(airports_list[0], d => d.flights_total)]);
+        var xAxis = d3.axisBottom(xScaler);
+        var yAxis = d3.axisLeft(yScaler);
+        
+        //Setting up tool_tip
+        var tool_tip = d3.tip()
+            .attr("class", "d3-tip")
+            .offset([-8, 0])
+            .html(function(d, i) { 
+                return (`${d[0].airport}<br>${d[0].city}`);
+            });
+        chartGroup.call(tool_tip);
 
-    chartGroup.append("text")
-    .attr("text-anchor", "middle")
-    .attr("transform", "translate("+ (chartWidth/2) +","+(chartHeight + 25)+")")
-    .text("Date");
-    
-     });
+        //Adding in the line itself
+        chartGroup.append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("class", "line")
+        .attr("d", drawLine)
+        .on('mouseover', tool_tip.show)
+        .on('mouseout', tool_tip.hide)
 
+        //Adding in the axes
+        chartGroup.append("g").attr("class", "x axis").attr("transform", `translate(0, ${chartHeight})`).call(xAxis);
+        chartGroup.append("g").attr("class", "y axis").call(yAxis);
+
+        //Adding in labels for the axes
+        chartGroup.append("text")
+        .attr("text-anchor", "middle")
+        .attr("transform", "translate("+ (-45) +","+(chartHeight/2)+")rotate(-90)")
+        .text("Flights");
+
+        chartGroup.append("text")
+        .attr("text-anchor", "middle")
+        .attr("transform", "translate("+ (chartWidth/2) +","+(chartHeight + 35)+")")
+        .text("Date");
+
+         });
 
     
+    airportLineGraph.update = function(airport, start_date, end_date){ 
+
+        var url = `/airports_month/${airport}/${start_date}/${end_date}`;
+        
+        //Using code from earlier
+        var svgWidth = 600;
+        var svgHeight = 400;
+        var chartMargin = {
+          top: 30,
+          right: 30,
+          bottom: 30,
+          left: 70
+        };
+        var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
+        var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
+        var parseTime = d3.timeParse("%Y%m");
+        var xScaler = d3.scaleTime().range([0, chartWidth]);
+        var yScaler = d3.scaleLinear().range([chartHeight, 0]);
+        var drawLine = d3
+        .line()
+        .x(d => xScaler(d.fly_month))
+        .y(d => yScaler(d.flights_total));
+    d3.selectAll("path.line").remove();
+
+        //Importing updated data
+        d3.json(url, function(updatedData) {
+            
+            updatedData.forEach(function (d) {
+                d.fly_month = parseTime(d.fly_month);
+                d.flights_total = +d.flights_total;
+            });
+            
+            Array.prototype.push.apply(airports_list[0], updatedData);
+
+            //Making sure our values are what we expect
+            airports_list.forEach(function (data) {
+                data.forEach(function (d) {
+                d.flights_total = +d.flights_total;
+                });
+            });
+            
+            console.log(airports_list[0]);
+            airports_list_list.push(updatedData);
+
+            //Appropriate Scaling
+//             xScaler.domain(d3.extent(airports_list[0], d => d.fly_month));
+//             yScaler.domain(d3.extent(airports_list[0], d => d.flights_total));
+            xScaler.domain([d3.min(airports_list[0], d => d.fly_month), d3.max(airports_list[0], d => d.fly_month)]);
+            yScaler.domain([d3.min(airports_list[0], d => d.flights_total), d3.max(airports_list[0], d => d.flights_total)]);
+            var xAxis = d3.axisBottom(xScaler);
+            var yAxis = d3.axisLeft(yScaler);
+            
+            //Setting up tool_tip
+            var tool_tip = d3.tip()
+                .attr("class", "d3-tip")
+                .offset([-8, 0])
+                .html(function(d, i) { 
+                    return (`${d[0].airport}<br>${d[0].city}`);
+                });
+            chartGroup.call(tool_tip);
+            var svg = d3.select("body").transition();
+//             svg.select("line").datum(d).duration(750).attr("d", drawLine);
+            svg.select(".x.axis").call(xAxis);
+            svg.select(".y.axis").call(yAxis);
+            
+            airports_list_list.forEach(function(d) {
+            //Changing the graph and line
+                chartGroup.append("path")
+                .datum(d)
+                .attr("fill", "none")
+                .attr("class", "line")
+                .attr("d", drawLine)
+                .on('mouseover', tool_tip.show)
+                .on('mouseout', tool_tip.hide)
+            });
+
+            });
+    };
+};
+
+function deleteLines(){
+    d3.selectAll("path.line").remove();
+    airports_list[0] = [];
+    airports_list_list = [];
+};
+
+airportLineGraph("#line", "ORD", 199001, 200912);
