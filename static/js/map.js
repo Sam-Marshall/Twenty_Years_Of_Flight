@@ -94,10 +94,11 @@ function getTable(table_data, colors, myMap) {
                 'maxWidth': '500',
                 'className': 'custom'
             }
-
+            console.log(d);
             var location = [parseFloat(d.dest_latitude), parseFloat(d.dest_longitude)]
             var marker = L.marker(location, { icon: airplaneIcon }).bindPopup(
                 "<h6>" + d.dest_city + " (" + d.dest_airport + ")" + "</h6>" +
+                `<p>Flight Distance: ${parseInt(d.flight_distance).toLocaleString('en')} miles</p>` +
                 `<p>Flights: ${parseInt(d.all_flights).toLocaleString('en')}</p>` +
                 `<p>Passengers: ${parseInt(d.all_passengers).toLocaleString('en')}</p>` +
                 `<p>Seats: ${parseInt(d.all_seats).toLocaleString('en')}</p>`, customOptions
