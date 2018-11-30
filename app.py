@@ -1,9 +1,6 @@
 #################################################
 # Dependencies
 #################################################
-import pandas as pd
-import numpy as np
-
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -79,6 +76,7 @@ def airport_loc(origin_airport_code, start_date, end_date):
         func.sum(Flights_cleaned.flights).label('total_flights'),
         func.sum(Flights_cleaned.passengers).label('total_passengers'),
         func.sum(Flights_cleaned.seats).label('total_seats'),
+        func.avg(Flights_cleaned.distance).label('flight_distance'),
         func.max(Flights_cleaned.fly_month).label('end_date'),
         func.min(Flights_cleaned.fly_month).label('start_date'),
         Flights_cleaned.origin,
@@ -110,8 +108,7 @@ def airport_loc(origin_airport_code, start_date, end_date):
         airport_dict["all_seats"] = str(airport.total_seats)
         airport_dict["dest_latitude"] = str(airport.dest_latitude)
         airport_dict["dest_longitude"] = str(airport.dest_longitude)
-        # airport_dict["orig_latitude"] = str(airport.orig_latitude)
-        # airport_dict["orig_longitude"] = str(airport.orig_longitude)
+        airport_dict["flight_distance"] = int(airport.flight_distance)
         airport_info.append(airport_dict)
 
     return jsonify(airport_info)

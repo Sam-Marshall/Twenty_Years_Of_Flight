@@ -23,43 +23,46 @@
             <h1>
                 <span>Flight Dashboard</span>
             </h1>
-            <h4>
+            <h3>
                 <span class="city_name"></span>
-            </h4>
-            <h4>
-                <span>Airport: <b class="airport_name">ORD</b></span>
-            </h4>
+                <span> (</span>
+                <b class="airport_name">ORD</b>
+                <span>)</span>
+            </h3>
             <h4>
                 <span>Years: <b class="start_date">1990</b> to <b class="end_date">2009</b></span>
             </h4>
         </div>
         <div class="row" id='info-boxes'>
             <div class="col-sm-2 text-center infoBox" id='info_month'>
-                <div>
-                    <span>Number of Months</span>
+                <div id='month_parent'>
+                    <h1 id='num_months'></h1>
                 </div>
-                <div id='num_months'></div>
+                <div>
+                    <h4>Months</h4>
+                </div>
             </div>
             <div class="col-sm-1"></div>
-            <div class="col-sm-2 text-center infoBox" id='info_flights_out'>
-                <div>
-                    <span>Average Flights Out</span>
-                </div>
-                <div id='average_flights_out'></div>
+            <div class="col-sm-2 text-center infoBox" id='info_capacity'>
+                <div id='average_flights_capacity'></div>
             </div>
             <div class="col-sm-1"></div>
             <div class="col-sm-3 text-center infoBox" id='info_distance_trav'>
-                <div>
-                    <span>Average Distance Traveled Out</span>
+                <div id='flight_parent'>
+                    <h1 id='average_distance_traveled'></h1>
                 </div>
-                <div id='average_distance_traveled'></div>
+                <div>
+                    <h4>Avg Flight Distance</h4>
+                </div>
             </div>
             <div class="col-sm-1"></div>
             <div class="col-sm-2 text-center infoBox" id='info_pop'>
-                <div>
-                    <span>Population</span>
+                <div id='pop_parent'>
+                    <h1 id='city_pop'></h1>
                 </div>
-                <div id='city_pop'></div>
+                <div>
+                    <h4>City Population</h4>
+                </div>
             </div>
         </div>
         <div class="row" id='slider_box'>

@@ -1,33 +1,90 @@
 #info-boxes {
     margin-bottom: 15px;
+    margin-top: 10px;
 }
 
 #info_month {
     border-style: solid;
     border-width: 2px;
     border-color: rgba(121, 0, 255);
-    background-color: rgba(121, 0, 255, .3);
+    background-color: rgba(121, 0, 255, .05);
 }
 
-#info_flights_out {
+#num_months {
+    color: rgba(121, 0, 255);
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    /*-webkit-text-stroke: 1px rgb(199, 199, 199);*/
+    text-shadow:
+        3px 3px 0 rgb(199, 199, 199),
+        -1px -1px 0 rgb(199, 199, 199),
+        1px -1px 0 rgb(199, 199, 199),
+        -1px 1px 0 rgb(199, 199, 199),
+        1px 1px 0 rgb(199, 199, 199);
+}
+
+#info_capacity {
     border-style: solid;
     border-width: 2px;
     border-color: rgba(0, 255, 0);
-    background-color: rgba(0, 255, 0, .3);
+    background-color: rgba(0, 255, 0, .05);
 }
 
 #info_distance_trav {
     border-style: solid;
     border-width: 2px;
     border-color: rgba(255, 0, 206);
-    background-color: rgba(255, 0, 206, .3);
+    background-color: rgba(255, 0, 206, .05);
+}
+
+#average_distance_traveled {
+    color: rgba(255, 0, 206);
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    /*-webkit-text-stroke: 1px rgb(199, 199, 199);*/
+    text-shadow:
+        3px 3px 0 rgb(199, 199, 199),
+        -1px -1px 0 rgb(199, 199, 199),
+        1px -1px 0 rgb(199, 199, 199),
+        -1px 1px 0 rgb(199, 199, 199),
+        1px 1px 0 rgb(199, 199, 199);
 }
 
 #info_pop {
     border-style: solid;
     border-width: 2px;
     border-color: rgba(251, 255, 64);
-    background-color: rgba(251, 255, 64, .3);
+    background-color: rgba(251, 255, 64, .05);
+}
+
+#city_pop {
+    color: rgba(251, 255, 64);
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    /*-webkit-text-stroke: 1px rgb(199, 199, 199);*/
+    text-shadow:
+        3px 3px 0 rgb(199, 199, 199),
+        -1px -1px 0 rgb(199, 199, 199),
+        1px -1px 0 rgb(199, 199, 199),
+        -1px 1px 0 rgb(199, 199, 199),
+        1px 1px 0 rgb(199, 199, 199);
+}
+
+#month_parent,
+#pop_parent,
+#flight_parent {
+    height: 100px;
+    position: relative;
+    margin-bottom: 15px;
 }
 
 .infoBox {
@@ -35,6 +92,6 @@
 }
 
 #info-boxes {
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 30px;
+    margin-right: 30px;
 }
