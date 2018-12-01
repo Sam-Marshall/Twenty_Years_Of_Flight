@@ -38,6 +38,12 @@ function button() {
         d3.selectAll(".start_date").text(start_year);
         d3.selectAll(".end_date").text(end_year);
         d3.selectAll(".airport_name").text(origin_city);
+        var airport = d3.select('#table_body').attr('flight_dest');
+        if (airport && airport != '') {
+            airportLineGraph("#dest_line", airport, start_year * 100 + 1, end_year * 100 + 12);
+        } else {
+            airportLineGraph("#origin_line", origin_city, start_year * 100 + 1, end_year * 100 + 12);
+        }
 
         pieChart.update(20, start_year * 100 + 1, end_year * 100 + 12);
         barChart.update(origin_city, start_year * 100 + 1, end_year * 100 + 12);
