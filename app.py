@@ -24,7 +24,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Database Setup
 #################################################
 # engine = create_engine("mysql://root:" + config.SQL_password +"@localhost:3306/flights_db")
+#local connection#
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:" + config.SQL_password +"@localhost:3306/flights_db"
+
+#heroku connection#
+# app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql://c9q2p7v0f6lehnoz:xbel57nc62sslz7k@r4919aobtbi97j46.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/gz2hw5w2zpkqi113'
+
 db = SQLAlchemy(app)
 
 # Reflect an existing database into a new model and the tables
