@@ -1,5 +1,8 @@
-/* path {
-    stroke: #fff;
+//Helped resolve an earlier line chart issue.
+//May no longer be necessary.      -John
+/* body{
+    width:1060px;
+    margin:50px auto;
 } */
 
 path:hover {
@@ -57,4 +60,10 @@ rect:hover {
     text-transform: capitalize;
     background: rgba(199, 199, 199, 0.9);
     border-radius: 4px;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
 }

@@ -74,6 +74,38 @@ def names():
 
     return jsonify(all_airports)
 
+@app.route('/airports_month/<airport>/<start_date>/<end_date>')
+def months(airport, start_date, end_date):
+    """Return a list of airports with their months"""
+    # Query all airports
+    results = db.session.query(\
+                              Airports_month.airport, \
+                              Airports_month.city, \
+                              Airports_month.month, \
+                              Airports_month.year, \
+                              Airports_month.flights_total, \
+                              Airports_month.fly_month) \
+                              .filter(Airports_month.airport == airport) \
+                              .filter(Airports_month.fly_month >= start_date) \
+                              .filter(Airports_month.fly_month <= end_date) \
+                              .all()
+
+    # Create a dictionary from the row data and append to a list of all_passengers
+    all_airports_month = []
+    for airport in results:
+        airport_dict = {}
+        airport_dict["airport"] = airport.airport
+        airport_dict["city"] = airport.city
+        airport_dict["fly_month"] = airport.fly_month
+        airport_dict["month"] = airport.month
+        airport_dict["year"] = airport.year
+        airport_dict["flights_total"] = airport.flights_total
+        all_airports_month.append(airport_dict)
+        
+    data_sorted = sorted(all_airports_month, key=lambda item: item['fly_month'])
+    return jsonify(data_sorted)
+
+
 @app.route('/airport_loc/<origin_airport_code>/<start_date>/<end_date>')
 def airport_loc(origin_airport_code, start_date, end_date):
 

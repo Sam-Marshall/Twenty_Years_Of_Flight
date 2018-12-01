@@ -13,10 +13,11 @@ function pieChart(id, top, start_date, end_date) {
 
     pieDim.r = Math.min(pieDim.w, pieDim.h) / 2.5;
     // var color = d3.scaleOrdinal(d3.schemeCategory20c);
-    var color = ['#FFFF66', '#FFE86F', '#FFD179', '#FFB982', '#FFA28B', 
-                        '#FF8B94', '#FF749E', '#FF5DA7', '#FF2EB9', '#FF00CC', 
-                        '#33FF00', '#41C746', '#46B55D', '#4AA274', '#4F908B', 
-                        '#537DA2', '#586BB9', '#5D58D1', '#6146E8', '#6633FF']
+    var color = ['#FFFF66', '#FFE86F', '#FFD179', '#FFB982', '#FFA28B',
+        '#FF8B94', '#FF749E', '#FF5DA7', '#FF2EB9', '#FF00CC',
+        '#33FF00', '#41C746', '#46B55D', '#4AA274', '#4F908B',
+        '#537DA2', '#586BB9', '#5D58D1', '#6146E8', '#6633FF'
+    ]
 
     // create svg for pie chart.
     var pieGroup = d3.select(id)
@@ -73,15 +74,17 @@ function pieChart(id, top, start_date, end_date) {
                 var value = d3.select(this).attr("value");
                 var start = d3.select(this).attr("start_date");
                 var end = d3.select(this).attr("end_date");
+                d3.select('tbody').attr('flight_dest', '');
                 barChart.update(value, start, end);
                 getPaths.update(value, start, end);
                 getInfoBoxes.update(value, start, end);
+                airportLineGraph("#origin_line", value, start, end);
             })
-            .on("dblclick", function() {
-                var start = d3.select(this).attr("start_date");
-                var end = d3.select(this).attr("end_date");
-                barChart.update("ALL", start, end);
-            });
+            // .on("dblclick", function() {
+            //     var start = d3.select(this).attr("start_date");
+            //     var end = d3.select(this).attr("end_date");
+            //     barChart.update("ALL", start, end);
+            // });
 
         g.append("text")
             .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })

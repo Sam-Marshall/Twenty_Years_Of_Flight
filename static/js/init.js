@@ -43,6 +43,7 @@ function button() {
         barChart.update(origin_city, start_year * 100 + 1, end_year * 100 + 12);
         getPaths.update(origin_city, start_year * 100 + 1, end_year * 100 + 12);
         getInfoBoxes.update(origin_city, start_year * 100 + 1, end_year * 100 + 12);
+        airportLineGraph("#origin_line", origin_city, start_year * 100 + 1, end_year * 100 + 12);
 
     });
 
@@ -63,3 +64,4 @@ getPaths("ORD", 199001, 200912);
 pieChart("#pie", 20, 199001, 200912);
 barChart("#bar", "ORD", 199001, 200912);
 getInfoBoxes("ORD", 199001, 200912);
+airportLineGraph("#origin_line", "ORD", 199001, 200912);

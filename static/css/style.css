@@ -1,7 +1,7 @@
 body {
     width: 100%;
     background: #2b2d3e;
-    color: rgb(199, 199, 199);
+    color: rgb(199, 199, 199) !important;
     font-family: 'Fjalla One', sans-serif;
 }
 
