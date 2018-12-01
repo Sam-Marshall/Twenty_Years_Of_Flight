@@ -84,7 +84,6 @@ function getTable(table_data, colors, myMap) {
 
             d3.select('.leaflet-marker-pane').html('');
             d3.select('tbody').attr('flight_dest', d.dest_airport);
-            d3.select('tbody').attr('flight_origin', d.origin_airport);
             console.log(d);
             airportLineGraph("#dest_line", d.dest_airport, d.start_date, d.end_date);
 
@@ -108,4 +107,7 @@ function getTable(table_data, colors, myMap) {
                 `<p>Seats: ${parseInt(d.all_seats).toLocaleString('en')}</p>`, customOptions
             ).addTo(myMap);
         });
+    d3.select("#table_body").attr('flight_origin', table_data[0].origin_airport);
+    d3.select("#table_body").attr('start_date', table_data[0].start_date);
+    d3.select("#table_body").attr('end_date', table_data[0].end_date);
 }

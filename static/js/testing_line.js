@@ -29,16 +29,16 @@ function airportLineGraph(id, airport, start_date, end_date) {
         .append("svg")
         .attr("height", svgHeight + chartMargin.top + chartMargin.bottom)
         .attr("width", svgWidth + chartMargin.left + chartMargin.right);
-    
-//     d3.select("#line")
-//        .append("div")
-//        .classed("svg-container", true) //container class to make it responsive
-//        .append("svg")
-//        //responsive SVG needs these 2 attributes and no width and height attr
-//        .attr("preserveAspectRatio", "xMinYMin meet")
-//        .attr("viewBox", "0 0 600 400")
-//        //class to make it responsive
-//        .classed("svg-content-responsive", true); 
+
+    //     d3.select("#line")
+    //        .append("div")
+    //        .classed("svg-container", true) //container class to make it responsive
+    //        .append("svg")
+    //        //responsive SVG needs these 2 attributes and no width and height attr
+    //        .attr("preserveAspectRatio", "xMinYMin meet")
+    //        .attr("viewBox", "0 0 600 400")
+    //        //class to make it responsive
+    //        .classed("svg-content-responsive", true); 
 
     var chartGroup = svg.append("g")
         .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
@@ -97,7 +97,7 @@ function airportLineGraph(id, airport, start_date, end_date) {
         var xAxis = d3.axisBottom(xScaler);
         var yAxis = d3.axisLeft(yScaler);
         var counter = 0
-        
+
 
         airport_list.forEach(function(data, i) {
 
@@ -115,18 +115,17 @@ function airportLineGraph(id, airport, start_date, end_date) {
                 .attr("class", "line")
                 .attr("d", drawLine)
                 .style("stroke", (d, i) => {
-                    console.log('Color # ' + i);
                     return colors[counter];
                 })
             // .on('mouseover', tool_tip.show)
             // .on('mouseout', tool_tip.hide)
-            
+
             counter += 1;
         });
 
         chartGroup.append("g").attr("class", "x axis").attr("transform", `translate(0, ${chartHeight})`).call(xAxis);
         chartGroup.append("g").attr("class", "y axis").call(yAxis);
-            
+
 
         chartGroup.append("text")
             .attr("text-anchor", "middle")
@@ -141,29 +140,43 @@ function airportLineGraph(id, airport, start_date, end_date) {
             .attr('class', 'line_label')
             .text("Date")
             .style('fill', 'silver');
-        
-            chartGroup.append("text")
+
+        chartGroup.append("text")
             .datum(data)
             .attr("text-anchor", "middle")
-            .attr("transform","translate(" + (chartWidth / 4) + "," + (chartHeight + 35) + ")")  // space legend
-            .attr("class", "legend")    // style the legend
-            .style("fill",  (d, i) => {
-                    return colors[0];})
+            .attr("transform", "translate(" + (chartWidth / 4) + "," + (chartHeight + 35) + ")") // space legend
+            .attr("class", "legend") // style the legend
+            .style("fill", (d, i) => {
+                return colors[0];
+            })
             .style("font-size", "20px")
             .text(airport_list[0][0].airport);
-            
+
+        if (id == '#dest_line') {
             chartGroup.append("text")
-            .datum(data)
-            .attr("text-anchor", "middle")
-            .attr("transform","translate(" + (chartWidth / 4 * 3) + "," + (chartHeight + 35) + ")")  // space legend
-            .attr("class", "legend")    // style the legend
-            .style("fill",  (d, i) => {
-                    return colors[1];})
-            .style("font-size", "20px")
-            .text(airport_list[1][0].airport);
+                .datum(data)
+                .attr("text-anchor", "middle")
+                .attr("transform", "translate(" + (chartWidth / 4 * 3) + "," + (chartHeight + 35) + ")") // space legend
+                .attr("class", "legend") // style the legend
+                .style("fill", (d, i) => {
+                    return colors[1];
+                })
+                .style("font-size", "20px")
+                .text(airport_list[1][0].airport);
+        }
 
     });
 
 };
 
-d3.select(window).on('resize', airportLineGraph);
+d3.select(window).on('resize', function() {
+    var airport = d3.select('#table_body').attr('flight_dest');
+    var start = d3.select('#table_body').attr('start_date');
+    var end = d3.select('#table_body').attr('end_date');
+    if (airport && airport != '') {
+        airportLineGraph("#dest_line", airport, start, end);
+    } else {
+        airport = d3.select('#table_body').attr('flight_origin');
+        airportLineGraph("#origin_line", airport, start, end);
+    }
+});
