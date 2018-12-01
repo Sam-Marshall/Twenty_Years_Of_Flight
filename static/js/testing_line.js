@@ -3,7 +3,7 @@ var colors = ["#00ff00", "#ff00ba"]
 
 function airportLineGraph(id, airport, start_date, end_date) {
 
-    //Needs: 1. Style Axis labels to not be black, 2. Legend, 3. Think about including tool tips and what information you would want to see, 4. Responsiveness on screen shrink (it fits the size of the screen that it was initialized on. It maintains that shape regardless of screen size change), 5. Perhaps needs vertical line drawn
+    //Needs: 3. Think about including tool tips and what information you would want to see, 4. Responsiveness on screen shrink (it fits the size of the screen that it was initialized on. It maintains that shape regardless of screen size change), 5. Perhaps needs vertical line drawn
 
     if (id == '#origin_line') {
         airport_list = [];
@@ -29,6 +29,16 @@ function airportLineGraph(id, airport, start_date, end_date) {
         .append("svg")
         .attr("height", svgHeight + chartMargin.top + chartMargin.bottom)
         .attr("width", svgWidth + chartMargin.left + chartMargin.right);
+    
+//     d3.select("#line")
+//        .append("div")
+//        .classed("svg-container", true) //container class to make it responsive
+//        .append("svg")
+//        //responsive SVG needs these 2 attributes and no width and height attr
+//        .attr("preserveAspectRatio", "xMinYMin meet")
+//        .attr("viewBox", "0 0 600 400")
+//        //class to make it responsive
+//        .classed("svg-content-responsive", true); 
 
     var chartGroup = svg.append("g")
         .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
@@ -87,8 +97,9 @@ function airportLineGraph(id, airport, start_date, end_date) {
         var xAxis = d3.axisBottom(xScaler);
         var yAxis = d3.axisLeft(yScaler);
         var counter = 0
+        
 
-        airport_list.forEach(data => {
+        airport_list.forEach(function(data, i) {
 
             // var tool_tip = d3.tip()
             //     .attr("class", "d3-tip")
@@ -109,24 +120,50 @@ function airportLineGraph(id, airport, start_date, end_date) {
                 })
             // .on('mouseover', tool_tip.show)
             // .on('mouseout', tool_tip.hide)
+            
             counter += 1;
         });
 
         chartGroup.append("g").attr("class", "x axis").attr("transform", `translate(0, ${chartHeight})`).call(xAxis);
         chartGroup.append("g").attr("class", "y axis").call(yAxis);
+            
 
         chartGroup.append("text")
             .attr("text-anchor", "middle")
-            .attr("transform", "translate(" + (-45) + "," + (chartHeight / 2) + ")rotate(-90)")
+            .attr("transform", "translate(" + (-46) + "," + (chartHeight / 2) + ")rotate(-90)")
             .attr('class', 'line_label')
-            .text("Total Flights");
+            .text("Total Flights")
+            .style('fill', 'silver');
 
         chartGroup.append("text")
             .attr("text-anchor", "middle")
             .attr("transform", "translate(" + (chartWidth / 2) + "," + (chartHeight + 35) + ")")
             .attr('class', 'line_label')
-            .text("Date");
+            .text("Date")
+            .style('fill', 'silver');
+        
+            chartGroup.append("text")
+            .datum(data)
+            .attr("text-anchor", "middle")
+            .attr("transform","translate(" + (chartWidth / 4) + "," + (chartHeight + 35) + ")")  // space legend
+            .attr("class", "legend")    // style the legend
+            .style("fill",  (d, i) => {
+                    return colors[0];})
+            .style("font-size", "20px")
+            .text(airport_list[0][0].airport);
+            
+            chartGroup.append("text")
+            .datum(data)
+            .attr("text-anchor", "middle")
+            .attr("transform","translate(" + (chartWidth / 4 * 3) + "," + (chartHeight + 35) + ")")  // space legend
+            .attr("class", "legend")    // style the legend
+            .style("fill",  (d, i) => {
+                    return colors[1];})
+            .style("font-size", "20px")
+            .text(airport_list[1][0].airport);
 
     });
 
 };
+
+d3.select(window).on('resize', airportLineGraph);
